@@ -25,7 +25,10 @@ void msort(Student * base, int nel, int (*compar)(const void *, const void *)) {
 	//so just return.
 
 	//FILL IN
-	
+		if (nel <= 1)
+	{
+		return;
+	}
 	//Inductive case: split the array in two, sort the two pieces with msort,
 	//merge the	sorted pieces
 		
@@ -39,26 +42,30 @@ void msort(Student * base, int nel, int (*compar)(const void *, const void *)) {
 	//1. Find the midpoint of the array
 
 	//FILL IN
+	//int mid = nel % 2? nel/2 : (nel-1)/2;
+	int mid = nel / 2;
+	// For example with a 6-element-array, start from 0 to 2, then 3 - 5
+	// 5-element-array, start from 0 - 2, then 3 - 4
 	
 	//2a. Sort the first half of the array (remember to adjust the # elements)
 
 	//FILL IN
-	
+	msort(base, mid, compar);
 	//2b. Sort the second half of the array. Pass in the address of the 
 	//beginning of the second half of the array (remember to use the right # of 
 	//elements)
 
 	//FILL IN
-	
+	msort(&base[mid], mid + 1, compar);
 	//3a. Merge the two arrays (use merge)
 
 	//FILL IN
-	
+	merge(base, mid, &base[mid], mid + 1, compar);
 	//3b. Copy the merged array over top of the original array (use copy)
 	//Don't forget to free the array you returned from merge -- you don't need it after the copy!
-
+	copy(base, merge, nel);
 	//FILL IN
-		
+	free(merge);
 	return;
 }
 #endif
@@ -84,19 +91,53 @@ Student * merge(Student * base1, int nel1, Student * base2, int nel2, int (*comp
 	//1. Allocate space for the returned merged array
 	
 	//FILL IN
-	
+	Student *return_array = malloc(sizeof(Student) * (nel1 + nel2));
 	//2. Create indices to keep track of where you are in the three arrays
 
 	//FILL IN
-	
+	int idx = 0;
+	int idx1 = 0;
+	int idx2 = 0;
 	//3. Go through base1 and base2, and merge them into the returned array
 
 	//FILL IN
-	
+	for(;idx < (nel1 + nel2); idx++)
+	{
+		// Always check if sorted all of the element
+		if (idx1 == nel1) // All of elements in array base1 are placed
+		{
+			for(; idx2 < nel2; idx++ && idx2++) // Fill the rest of the array with the rest pf array base2
+			{
+				*(return_array + idx) = base2[idx2];
+			}
+			break;
+		}
+		else if (idx2 == nel2) // All of elemetns in array base2 are placed
+		{
+			for(; idx1 < nel1; idx++ && idx1++)
+			{
+				*(return_array + idx) = base1[idx1];
+			}		
+			break;	
+		}
+		if (compar(&base1[idx1], &base2[idx2]) < 0) //Compare two elements in the array
+		{
+			*(return_array + idx) = base1[idx1];
+			idx1++;
+		}
+		else
+		{
+			*(return_array + idx) = base2[idx2];
+			idx2++;
+		}
+	}
+	// compare each element of base1 and base2, and put the smaller one into the return_array
+	// if one of the arrays is exhausted, just copy the rest of the other array into the return_array
+	// use the compar function to compare the elements
 	//4. Return the merged array
 
 	//FILL IN
-
+	return return_array;
 }
 
 /*
