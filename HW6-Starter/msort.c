@@ -25,7 +25,7 @@ void msort(Student * base, int nel, int (*compar)(const void *, const void *)) {
 	//so just return.
 
 	//FILL IN
-		if (nel <= 1)
+	if (nel <= 1)
 	{
 		return;
 	}
@@ -56,16 +56,16 @@ void msort(Student * base, int nel, int (*compar)(const void *, const void *)) {
 	//elements)
 
 	//FILL IN
-	msort(&base[mid], mid + 1, compar);
+	msort(&base[mid], nel - mid, compar);
 	//3a. Merge the two arrays (use merge)
 
 	//FILL IN
-	merge(base, mid, &base[mid], mid + 1, compar);
+	Student *merged_array = merge(base, mid, &base[mid], nel - mid, compar);
 	//3b. Copy the merged array over top of the original array (use copy)
 	//Don't forget to free the array you returned from merge -- you don't need it after the copy!
-	copy(base, merge, nel);
+	copy(base, merged_array, nel);
 	//FILL IN
-	free(merge);
+	free(merged_array);
 	return;
 }
 #endif
@@ -106,17 +106,19 @@ Student * merge(Student * base1, int nel1, Student * base2, int nel2, int (*comp
 		// Always check if sorted all of the element
 		if (idx1 == nel1) // All of elements in array base1 are placed
 		{
-			for(; idx2 < nel2; idx++ && idx2++) // Fill the rest of the array with the rest pf array base2
+			for(; idx2 < nel2; idx++) // Fill the rest of the array with the rest of array base2
 			{
 				*(return_array + idx) = base2[idx2];
+				idx2++;
 			}
 			break;
 		}
 		else if (idx2 == nel2) // All of elemetns in array base2 are placed
 		{
-			for(; idx1 < nel1; idx++ && idx1++)
+			for(; idx1 < nel1; idx++) // Fill the rest of the array with the rest of array base1
 			{
 				*(return_array + idx) = base1[idx1];
+				idx1++;
 			}		
 			break;	
 		}
