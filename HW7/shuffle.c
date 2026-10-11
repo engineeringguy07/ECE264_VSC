@@ -31,6 +31,23 @@ static void printDeck(CardDeck deck)
 // cards from the bottom of the original deck.
 void divide(CardDeck origDeck, CardDeck * leftDeck, CardDeck * rightDeck)
 {
+  for(int k = 0; k < origDeck.size - 1; k++)
+  {
+    int count = 0;
+    for(int i = 0; i <= k; i++)
+    {
+      leftDeck[k].cards[i] = origDeck.cards[i];
+      count++;
+    }
+  
+    leftDeck[k].size = count;
+    rightDeck[k].size = origDeck.size - count;
+    
+    for(int i = 0; i < rightDeck[k].size; i++)
+    {
+      rightDeck[k].cards[i] = origDeck.cards[count++];
+    }
+  }  
 }
 #endif
 
