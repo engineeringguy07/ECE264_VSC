@@ -93,10 +93,49 @@ void divide(CardDeck origDeck, CardDeck * leftDeck, CardDeck * rightDeck)
 // function, please keep it inside #ifdef TEST_INTERLEAVE and #endif
 // so that the function can be removed for grading other parts of the
 // program.
+void placing_cards(CardDeck result, CardDeck leftDeck, CardDeck rightDeck, int idx_left, int idx_right, int idx_result)
+{
+  if (idx_left == leftDeck.size) // base case: when used all of the left deck
+  {
+    for (int i = idx_right; i < rightDeck.size; i++) // fill the rest of result with the remaining cards in right deck
+    {
+      result.cards[idx_result] = rightDeck.cards[i];
+      idx_result++;
+    }
+    printDeck(result);
+    return;
+  }
+  else if (idx_right == rightDeck.size) // base case: when used all of right deck
+  {
+    for (int i = idx_left; i < leftDeck.size; i++) // fill the rest of result with the remaining cards in left deck
+    {
+      result.cards[idx_result] = leftDeck.cards[i];
+      idx_result++;
+    } 
+    printDeck(result);
+    return;
+  }
+  
+  result.cards[idx_result] = leftDeck.cards[idx_left];
+  placing_cards(result, leftDeck,rightDeck, idx_left + 1, idx_right, idx_result + 1);
+
+  result.cards[idx_result] = rightDeck.cards[idx_right];
+  placing_cards(result, leftDeck,rightDeck, idx_left, idx_right + 1, idx_result + 1);
+
+}
+
 void interleave(CardDeck leftDeck, CardDeck rightDeck)
 {
+  CardDeck result;
+  result.size = leftDeck.size + rightDeck.size;
+  int idx_left = 0;
+  int idx_right = 0;
+  int idx_result = 0;
+  placing_cards(result, leftDeck, rightDeck, idx_left, idx_right, idx_result);
 }
 #endif
+
+
 
 #ifdef TEST_SHUFFLE
 // The shuffle function has the following steps:
@@ -113,6 +152,20 @@ void interleave(CardDeck leftDeck, CardDeck rightDeck)
 // 4. release allocated memory
 //
 void shuffle(CardDeck origDeck)
-{
+{ 
+  //Allocate mem
+  CardDeck *leftDecks = malloc((origDeck.size - 1) * sizeof(CardDeck));
+  CardDeck *rightDecks = malloc((origDeck.size - 1) * sizeof(CardDeck));
+  
+  divide(origDeck, leftDecks, rightDecks);// Fill allocated mem
+
+  for(int i = 0; i < origDeck.size - 1; i++) // Send each pair to interleave
+  {
+    interleave(leftDecks[i], rightDecks[i]);
+  }
+
+  // Free allocated mem
+  free(leftDecks);
+  free(rightDecks);
 }
 #endif
