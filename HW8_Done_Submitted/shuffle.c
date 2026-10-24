@@ -32,8 +32,6 @@ void shuffle_deck(CardDeck Deck, int remain_round)
   {
     interleave(leftDecks[i], rightDecks[i], remain_round);
   }
-
-
   // Free allocated mem
   free(leftDecks);
   free(rightDecks);
