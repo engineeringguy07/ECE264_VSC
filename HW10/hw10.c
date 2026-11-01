@@ -32,6 +32,25 @@ void printListNode(ListNode * head)
 // the linked list must end with NULL
 ListNode * createList(int valn)
 {
+  ListNode * head = NULL;
+  ListNode * current = NULL;
+  for (int i = 0; i < valn; i++)
+  {
+    ListNode *newNode = malloc(sizeof(ListNode));
+    newNode->value = i;
+    newNode->next = NULL;
+    if (head == NULL) // initialize first node of the list
+    {
+      head = newNode;
+      current = newNode;
+    }
+    else
+    {
+      current->next = newNode;
+      current = newNode;
+    }
+  }
+  return head;
 }
 #endif
 
@@ -46,12 +65,44 @@ ListNode * createList(int valn)
 // print the values of the nodes to be deleted
 void eliminate(ListNode * head, int valk)
 {
+  if (valk < 1 || head == NULL)
+  {
+    return; // nothing to eliminate
+  }
+  ListNode * p = head;
+  int count = 1;
+  while (head->next != NULL)
+  {
+    if (count == valk)
+    {
+      ListNode * todelete = p;
+      p = p->next;
+
 #ifdef DEBUG
   // this #ifdef ... #endif should be inside the condition *BEFORE* a
   // node' value is printed and it is deleted
-  ListNode * todelete = p;
   printListNode (todelete); 
 #endif
+      printf("%d\n", todelete->value);
+      head = deleteNode(head, todelete);
+      if (p == NULL)
+      {
+        p = head; // restart from the beginning of the list
+      }
+      count = 1; // reset count 
+    }
+    else
+    {
+      p = p->next;
+      count++;
+      if (p == NULL)
+      {
+        p = head; // restart from the beginning of the list
+      }
+    }
+  }
+  printf("%d\n", head->value); 
+  free(head);
 }
 #endif
 
@@ -71,6 +122,32 @@ void eliminate(ListNode * head, int valk)
 // the head). If this occurs, return the second node of the list.
 ListNode * deleteNode(ListNode * head, ListNode * todelete)
 {
+  if (head == NULL)
+  {
+    return NULL;
+  }
+  if (todelete == NULL)
+  {
+    return head;
+  }
+  if (head == todelete)
+  {
+    ListNode * newHead = head->next; // reroute
+    free(head); // release
+    return newHead;
+  }
+  ListNode * current = head;
+  while (current->next != NULL)
+  {
+    if (current->next == todelete)
+    {
+      current->next = todelete->next; // reroute
+      free(todelete); // release
+      return head;  
+    }
+    current = current->next;
+  }
+  return head;
 }
 #endif
 
