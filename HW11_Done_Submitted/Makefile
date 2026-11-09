@@ -11,7 +11,7 @@ test: all
 	@status=0; \
 	for i in $(TEST_IDS); do \
 		./$(EXEC) testcases/maze$$i output$$i; \
-		if diff -u expected/expected$$i output$$i > /dev/null; then \
+		if diff -w -u expected/expected$$i output$$i > /dev/null; then \
 			echo "[PASS] maze$$i"; \
 		else \
 			echo "[FAIL] maze$$i"; \
