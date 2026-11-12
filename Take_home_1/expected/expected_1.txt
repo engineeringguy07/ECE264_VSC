@@ -1,0 +1,9 @@
+=== Text Metrics ===
+Total Letters:   3
+Vowels:          1
+Consonants:      2
+Tokens:          1
+
+=== Morse Encoding ===
+Length:  11
+Encoded: ... --- ...

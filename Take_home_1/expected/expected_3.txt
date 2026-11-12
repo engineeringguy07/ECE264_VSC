@@ -1,0 +1,9 @@
+=== Text Metrics ===
+Total Letters:   31
+Vowels:          10
+Consonants:      21
+Tokens:          6
+
+=== Morse Encoding ===
+Length:  127
+Encoded: .... . .-.. .-.. --- / .-- --- .-. .-.. -.. / .-- . .-.. -.-. --- -- . / - --- / -.-. / .--. .-. --- --. .-. .- -- -- .. -. --.

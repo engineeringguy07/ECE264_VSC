@@ -1,0 +1,9 @@
+=== Text Metrics ===
+Total Letters:   0
+Vowels:          0
+Consonants:      0
+Tokens:          0
+
+=== Morse Encoding ===
+Length:  0
+Encoded: 
