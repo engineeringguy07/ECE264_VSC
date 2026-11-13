@@ -50,6 +50,33 @@ static TextMetrics analyze_helper(const char *text, char prev_char) {
   TextMetrics metrics = {0, 0, 0, 0};
 
   /* YOUR RECURSIVE IMPLEMENTATION HERE */
+  // 1. Base case: end of string
+  if (*text == '\0')
+  {
+    return metrics;
+  }
+
+  // 2. Recursive step
+  TextMetrics next_metrics = analyze_helper(text + 1, *text);
+  if (isalpha(*text))
+  {
+    next_metrics.total_chars++;
+    if (is_vowel(*text))
+    {
+      next_metrics.vowel_count ++;
+    }
+    else
+    {
+      next_metrics.consonant_count ++;
+    }
+  }
+
+  if (!isspace(*text) && (isspace(prev_char) || prev_char == '\0'))
+  {
+    next_metrics.token_count ++;
+  }
+  return next_metrics;
+  
 }
 
 /* DO NOT MODIFY */
@@ -113,6 +140,48 @@ static int morse_helper(const char *text, char *out_buffer, int out_idx,
                         int max_len, bool in_whitespace,
                         bool needs_letter_space) {
   /* YOUR RECURSIVE IMPLEMENTATION HERE */
+  // Base case
+  if (*text == '\0' || out_idx >= max_len - 1) 
+  {
+    out_buffer[out_idx] = '\0';
+    return out_idx;
+  }
+
+  // Recursive step
+  // 2.
+  if (isspace(*text))
+  {
+    if (!in_whitespace && out_idx > 0 && out_idx +3 < max_len)
+    {
+      out_buffer[out_idx] = ' ';
+      out_buffer[out_idx+1] = '/';
+      out_buffer[out_idx+2] = ' ';
+      return morse_helper(text + 1, out_buffer, out_idx + 3, max_len, true, false);
+    }
+    else
+    {
+      return morse_helper(text + 1, out_buffer, out_idx, max_len, true, false);
+    }
+  }
+  
+  // 3. 
+  if (isalpha(*text))
+  {
+    if (needs_letter_space)
+    {
+      if (out_idx + 2 >= max_len) // check if there is enough space for a letter and a space
+      {
+        out_buffer[out_idx] = '\0';
+        return out_idx;
+      }
+      out_buffer[out_idx] = ' ';
+      out_idx++;
+    }
+    int letters_copied = copy_string_recursive(out_buffer + out_idx, MORSE_TABLE[toupper(*text) - 'A'].morse, max_len - 1 - out_idx);
+    return morse_helper(text + 1, out_buffer, out_idx + letters_copied, max_len, false, true);
+  }
+  // 4.
+  return morse_helper(text + 1, out_buffer, out_idx, max_len, in_whitespace, needs_letter_space);
 }
 
 /* DO NOT MODIFY */
