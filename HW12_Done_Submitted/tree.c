@@ -64,7 +64,36 @@ void preOrderToFile(Tree * tr, char * filename)
 // inArray: an integer array containing the in-order traversal output
 // postArray: an integer array containing the post-order traversal output
 // size: number of integers in inArray or postArray
+static TreeNode * buildTreeHelper(int * inArray, int * postArray, int inStart, int inEnd, int postStart, int postEnd)
+{
+  // Base case
+  if (inStart > inEnd || postStart > postEnd)
+  {
+    return NULL;
+  }
+
+  TreeNode * root = (TreeNode *) malloc(sizeof(TreeNode));
+  root -> value = postArray[postEnd];
+
+  // Recursive step
+  int i;
+  for (i = inStart; i <= inEnd; i++)
+  {
+    if (inArray[i] == root -> value)
+    {
+      root -> left = buildTreeHelper(inArray, postArray, inStart, i - 1, postStart, postStart + (i - inStart) - 1);
+      root -> right = buildTreeHelper(inArray, postArray, i + 1, inEnd, postStart + (i - inStart), postEnd - 1);
+      break;
+    }
+  }
+  return root;
+}
+
 Tree * buildTree(int * inArray, int * postArray, int size)
 {
+  Tree * tr = (Tree *) malloc(sizeof(Tree));
+  tr -> root = buildTreeHelper(inArray, postArray, 0, size - 1, 0, size - 1);
+  return tr;
 }
 #endif
+
